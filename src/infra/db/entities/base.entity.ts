@@ -7,12 +7,11 @@ import {
   BeforeInsert,
   BeforeUpdate,
 } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 
 export class BaseEntity {
   @AutoMap()
-  @PrimaryGeneratedColumn('uuid')
-  public id: string;
+  @PrimaryGeneratedColumn('increment')
+  public id: number;
 
   @AutoMap()
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz', precision: 3 })
@@ -38,10 +37,6 @@ export class BaseEntity {
 
   @BeforeInsert()
   public beforeInsertEntity() {
-    if (!this.id) {
-      this.id = uuidv4();
-    }
-
     this.createdAt = new Date();
     this.updatedAt = new Date();
   }

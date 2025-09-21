@@ -1,15 +1,334 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/": {
+    "/users": {
       "get": {
-        "operationId": "AppController_getHello",
-        "parameters": [],
+        "operationId": "UsersController_getUsersAsync",
+        "summary": "Lists users",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "number"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "createdAt",
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "asc",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The list of users has been successfully retrieved."
           }
-        }
+        },
+        "tags": [
+          "users"
+        ]
+      },
+      "post": {
+        "operationId": "UsersController_createUserAsync",
+        "summary": "Creates a new user",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "The data for the user to be created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The user has been successfully created."
+          },
+          "400": {
+            "description": "Invalid request body or missing data."
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UsersController_getUserAsync",
+        "summary": "Retrieves information about a specific user",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The unique ID of the user",
+            "schema": {
+              "example": "1",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User information has been successfully retrieved."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/{userId}/borrow/{bookId}": {
+      "post": {
+        "operationId": "UsersController_borrowBookAsync",
+        "summary": "Borrows a book",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "bookId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Book successfully borrowed."
+          },
+          "404": {
+            "description": "User or Book not found."
+          },
+          "409": {
+            "description": "User has already borrowed this book."
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/{userId}/return/{bookId}": {
+      "post": {
+        "operationId": "UsersController_returnBookAsync",
+        "summary": "Returns a borrowed book and gives a rating",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "bookId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReturnBookRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Book successfully returned and rated."
+          },
+          "400": {
+            "description": "Invalid user score."
+          },
+          "404": {
+            "description": "Active borrowing record not found."
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/books": {
+      "get": {
+        "operationId": "BooksController_getBooksAsync",
+        "summary": "Lists books",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "number"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "createdAt",
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "asc",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The list of books has been successfully retrieved."
+          }
+        },
+        "tags": [
+          "books"
+        ]
+      },
+      "post": {
+        "operationId": "BooksController_createBookAsync",
+        "summary": "Creates a new book",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "The data for the book to be created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBookRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The book has been successfully created."
+          },
+          "400": {
+            "description": "Invalid request body or missing data."
+          }
+        },
+        "tags": [
+          "books"
+        ]
+      }
+    },
+    "/books/{id}": {
+      "get": {
+        "operationId": "BooksController_getBookAsync",
+        "summary": "Retrieves information about a specific book",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The unique ID of the book",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The book information has been successfully retrieved."
+          },
+          "404": {
+            "description": "Book not found."
+          }
+        },
+        "tags": [
+          "books"
+        ]
       }
     }
   },
@@ -21,7 +340,7 @@
   },
   "tags": [
     {
-      "name": "library-management",
+      "name": "Library Management",
       "description": ""
     }
   ],
@@ -31,6 +350,41 @@
     }
   ],
   "components": {
-    "schemas": {}
+    "schemas": {
+      "CreateUserRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "ReturnBookRequestDto": {
+        "type": "object",
+        "properties": {
+          "score": {
+            "type": "number",
+            "default": 10
+          }
+        },
+        "required": [
+          "score"
+        ]
+      },
+      "CreateBookRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    }
   }
 }

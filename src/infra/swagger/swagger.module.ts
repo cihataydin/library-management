@@ -25,7 +25,7 @@ export class SwaggerModule {
       'SWAGGER_EXPORT_PATH',
       'api-collections/library-management',
     );
-    const appName = config.get<string>('APP_NAME', 'library-management');
+    const appName = config.get<string>('APP_NAME', 'Library Management');
     const appProtocol = config.get<string>('APP_PROTOCOL', 'http');
     const appHost = config.get<string>('APP_HOST', 'localhost');
     const appPort = config.get<number>('APP_PORT', 3000);

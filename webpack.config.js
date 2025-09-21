@@ -30,5 +30,6 @@ module.exports = function (options) {
       path: path.join(__dirname, 'dist'),
       filename: 'main.js',
     },
+    // devtool: 'source-map',
   };
 };
